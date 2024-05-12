@@ -8,6 +8,7 @@ use App\MoonRace\Security\Service\UserPasswordSecurity;
 use App\MoonRace\User\Contract\IUserRegistrationData;
 use App\MoonRace\User\Entity\IUserEntityBuilder;
 use App\MoonRace\User\Repository\IUserRepository;
+use App\MoonRace\Wallet\Service\WalletCreator;
 
 class UserRegistrationAction
 {
@@ -16,6 +17,7 @@ class UserRegistrationAction
         private readonly UserPasswordSecurity $userPasswordSecurity,
         private readonly IDataStorageSaver    $dataStorageSaver,
         private readonly IUserRepository      $userRepository,
+        private readonly WalletCreator        $walletCreator,
         private readonly string               $userDefaultAvatar
     ) {}
 
@@ -30,15 +32,18 @@ class UserRegistrationAction
         }
 
         $user = $this->userEntityBuilder->build();
+        $wallet = $this->walletCreator->create();
 
         $user->setName($data->getName());
         $user->setEmail($data->getEmail());
         $user->setAvatar($this->userDefaultAvatar);
         $this->userPasswordSecurity->updatePassword($data->getPassword(), $user);
+        $user->setWallet($wallet);
 
         $this
             ->dataStorageSaver
             ->persist($user)
+            ->persist($wallet)
             ->flush();
     }
 }

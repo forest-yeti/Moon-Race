@@ -2,6 +2,8 @@
 
 namespace App\MoonRace\User\Entity;
 
+use App\Entity\Wallet;
+
 interface IUser
 {
     public function getName(): string;
@@ -12,4 +14,7 @@ interface IUser
 
     public function getAvatar(): string;
     public function setAvatar(string $avatar): self;
+
+    public function getWallet(): Wallet;
+    public function setWallet(Wallet $wallet): self;
 }

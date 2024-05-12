@@ -28,6 +28,9 @@ class User implements IUser, IUserSecurity, PasswordAuthenticatedUserInterface
     #[ORM\Column(type: 'string', length: 255)]
     private string $password;
 
+    #[ORM\ManyToOne(targetEntity: Wallet::class)]
+    private Wallet $wallet;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -75,6 +78,17 @@ class User implements IUser, IUserSecurity, PasswordAuthenticatedUserInterface
     {
         $this->password = $password;
 
+        return $this;
+    }
+
+    public function getWallet(): Wallet
+    {
+        return $this->wallet;
+    }
+
+    public function setWallet(Wallet $wallet): IUser
+    {
+        $this->wallet = $wallet;
         return $this;
     }
 }
