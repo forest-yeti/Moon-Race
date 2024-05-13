@@ -12,4 +12,10 @@ interface ISlot
 
     public function getDescriptor(): int;
     public function setDescriptor(int $descriptor): self;
+
+    public function getResourcePresenter(): string;
+    public function setResourcePresenter(string $resourcePresenter): self;
+
+    public function getWinRate(): float;
+    public function setWinRate(float $winRate): self;
 }

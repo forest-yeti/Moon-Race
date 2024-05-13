@@ -24,6 +24,12 @@ class Slot implements ISlot
     #[ORM\Column(type: 'integer')]
     private int $descriptor;
 
+    #[ORM\Column(type: 'string')]
+    private string $resourcePresenter;
+
+    #[ORM\Column(type: 'float')]
+    private float $winRate;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -59,6 +65,28 @@ class Slot implements ISlot
     public function setDescriptor(int $descriptor): ISlot
     {
         $this->descriptor = $descriptor;
+        return $this;
+    }
+
+    public function getResourcePresenter(): string
+    {
+        return $this->resourcePresenter;
+    }
+
+    public function setResourcePresenter(string $resourcePresenter): self
+    {
+        $this->resourcePresenter = $resourcePresenter;
+        return $this;
+    }
+
+    public function getWinRate(): float
+    {
+        return $this->winRate;
+    }
+
+    public function setWinRate(float $winRate): self
+    {
+        $this->winRate = $winRate;
         return $this;
     }
 }
