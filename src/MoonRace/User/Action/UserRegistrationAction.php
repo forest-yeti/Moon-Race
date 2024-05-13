@@ -5,6 +5,7 @@ namespace App\MoonRace\User\Action;
 use App\MoonRace\Common\Exception\RuntimeException;
 use App\MoonRace\Security\Service\IDataStorageSaver;
 use App\MoonRace\Security\Service\UserPasswordSecurity;
+use App\MoonRace\Security\Service\UserSocketTokenSecurity;
 use App\MoonRace\User\Contract\IUserRegistrationData;
 use App\MoonRace\User\Entity\IUserEntityBuilder;
 use App\MoonRace\User\Repository\IUserRepository;
@@ -13,12 +14,13 @@ use App\MoonRace\Wallet\Service\WalletCreator;
 class UserRegistrationAction
 {
     public function __construct(
-        private readonly IUserEntityBuilder   $userEntityBuilder,
-        private readonly UserPasswordSecurity $userPasswordSecurity,
-        private readonly IDataStorageSaver    $dataStorageSaver,
-        private readonly IUserRepository      $userRepository,
-        private readonly WalletCreator        $walletCreator,
-        private readonly string               $userDefaultAvatar
+        private readonly IUserEntityBuilder      $userEntityBuilder,
+        private readonly UserPasswordSecurity    $userPasswordSecurity,
+        private readonly UserSocketTokenSecurity $userSocketTokenSecurity,
+        private readonly IDataStorageSaver       $dataStorageSaver,
+        private readonly IUserRepository         $userRepository,
+        private readonly WalletCreator           $walletCreator,
+        private readonly string                  $userDefaultAvatar
     ) {}
 
     /**
@@ -38,6 +40,7 @@ class UserRegistrationAction
         $user->setEmail($data->getEmail());
         $user->setAvatar($this->userDefaultAvatar);
         $this->userPasswordSecurity->updatePassword($data->getPassword(), $user);
+        $this->userSocketTokenSecurity->generate($user);
         $user->setWallet($wallet);
 
         $this

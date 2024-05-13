@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use App\MoonRace\Security\Entity\IUserSecurity;
 use App\MoonRace\User\Entity\IUser;
+use App\MoonRace\Wallet\Entity\IWallet;
 use App\Repository\UserRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
@@ -30,6 +31,9 @@ class User implements IUser, IUserSecurity, PasswordAuthenticatedUserInterface
 
     #[ORM\ManyToOne(targetEntity: Wallet::class)]
     private Wallet $wallet;
+
+    #[ORM\Column(type: 'string')]
+    private string $socketToken;
 
     public function getId(): ?int
     {
@@ -81,14 +85,26 @@ class User implements IUser, IUserSecurity, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    public function getWallet(): Wallet
+    public function getWallet(): IWallet
     {
         return $this->wallet;
     }
 
-    public function setWallet(Wallet $wallet): IUser
+    public function setWallet(IWallet $wallet): IUser
     {
         $this->wallet = $wallet;
+        return $this;
+    }
+
+    public function getSocketToken(): string
+    {
+        return $this->socketToken;
+    }
+
+    public function setSocketToken(string $socketToken): self
+    {
+        $this->socketToken = $socketToken;
+
         return $this;
     }
 }

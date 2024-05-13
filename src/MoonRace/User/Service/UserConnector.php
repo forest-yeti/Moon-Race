@@ -7,13 +7,15 @@ use App\MoonRace\Common\Exception\RuntimeException;
 use App\MoonRace\Common\Game\Enum\GameTypeEnum;
 use App\MoonRace\Security\Service\IDataStorageSaver;
 use App\MoonRace\User\Entity\IUser;
+use App\MoonRace\User\Entity\IUserGameEntityBuilder;
 use App\MoonRace\User\Repository\IUserGameRepository;
 
 class UserConnector
 {
     public function __construct(
-        private readonly IUserGameRepository $userGameRepository,
-        private readonly IDataStorageSaver   $dataStorageSaver
+        private readonly IUserGameRepository    $userGameRepository,
+        private readonly IDataStorageSaver      $dataStorageSaver,
+        private readonly IUserGameEntityBuilder $userGameEntityBuilder
     ) {}
 
     /**
@@ -26,7 +28,7 @@ class UserConnector
             throw new RuntimeException('You are already playing another game');
         }
 
-        $userGame = new UserGame();
+        $userGame = $this->userGameEntityBuilder->build();
         $userGame->setUser($user);
         $userGame->setType($gameType->value);
         $userGame->setGameId($gameId);

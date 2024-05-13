@@ -27,7 +27,7 @@ class Wallet implements IWallet
         return $this->balance;
     }
 
-    public function setBalance(float $balance): IWallet
+    public function setBalance(float $balance): Wallet
     {
         $this->balance = $balance;
         return $this;

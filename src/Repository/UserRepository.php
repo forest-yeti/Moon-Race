@@ -35,4 +35,13 @@ class UserRepository extends ServiceEntityRepository implements IUserRepository
             ->getQuery()
             ->getOneOrNullResult();
     }
+
+    public function findBySocketToken(string $socketToken): ?IUser
+    {
+        return $this->createQueryBuilder('u')
+            ->where('u.socketToken = :socketToken')
+            ->setParameter('socketToken', $socketToken)
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
 }

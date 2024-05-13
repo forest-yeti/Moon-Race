@@ -9,4 +9,6 @@ interface IUserRepository
     public function findById(int $id): ?IUser;
 
     public function findByEmail(string $email): ?IUser;
+
+    public function findBySocketToken(string $socketToken): ?IUser;
 }
