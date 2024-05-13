@@ -4,11 +4,13 @@ namespace App\Infrastructure\Ratchet;
 
 use App\Infrastructure\Ratchet\ActionHandler\ConnectActionHandler;
 use App\Infrastructure\Ratchet\Input\Input;
+use App\Infrastructure\Ratchet\Repository\ActionHandlerRepository;
 use App\Infrastructure\Ratchet\Service\OutputBuilder;
 use App\MoonRace\User\Repository\IUserRepository;
 use Exception;
 use Ratchet\MessageComponentInterface;
 use Ratchet\ConnectionInterface;
+use RuntimeException;
 use Symfony\Component\Console\Formatter\OutputFormatterStyle;
 use SplObjectStorage;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -17,13 +19,9 @@ class SocketServer implements MessageComponentInterface
 {
     private SplObjectStorage $clients;
 
-    /** @var ConnectionInterface[] */
-    private array            $authorizedClients = [];
-
     public function __construct(
-        private readonly OutputInterface $consoleOutput,
-        private readonly IUserRepository $userRepository,
-        private readonly OutputBuilder   $outputBuilder
+        private readonly OutputInterface         $consoleOutput,
+        private readonly ActionHandlerRepository $actionHandlerRepository
     )
     {
         $this->clients = new SplObjectStorage();
@@ -45,13 +43,6 @@ class SocketServer implements MessageComponentInterface
     {
         $this->clients->detach($conn);
 
-        foreach ($this->authorizedClients as $key => $client) {
-            if ($client === $conn) {
-                $this->consoleOutput->writeln($key);
-                unset($this->authorizedClients[$key]);
-            }
-        }
-
         $outputStyle = new OutputFormatterStyle('black', 'red');
         $this->consoleOutput->getFormatter()->setStyle('danger', $outputStyle);
         $this->consoleOutput->writeln('<danger>Close</danger>');
@@ -70,35 +61,11 @@ class SocketServer implements MessageComponentInterface
         $payload = json_decode($msg, true);
         $input = new Input($payload);
 
-        if ($input->getAction() === 'connect') {
-            $socketToken = $input->get('socket_token');
-            if ($socketToken === null) {
-                $from->send(
-                    $this->outputBuilder->build(
-                        'Connection',
-                        ['errors' => ['Invalid socket token']]
-                    )
-                );
-            }
-
-            $user = $this->userRepository->findBySocketToken($socketToken);
-            if ($user === null) {
-                $from->send(
-                    $this->outputBuilder->build(
-                        'Connection',
-                        ['errors' => ['Invalid socket token']]
-                    )
-                );
-                return;
-            }
-
-            $this->authorizedClients[$socketToken] = $from;
-            $from->send(
-                $this->outputBuilder->build(
-                    'Connection',
-                    result: true
-                )
-            );
+        try {
+            $actionHandler = $this->actionHandlerRepository->find($input->getAction());
+            $actionHandler->run($input->get('socket_token'), $from, $input);
+        } catch (RuntimeException) {
+            // ...
         }
     }
 }

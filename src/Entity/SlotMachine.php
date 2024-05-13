@@ -26,6 +26,7 @@ class SlotMachine implements ISlotMachine
     #[ORM\Column(type: 'float')]
     private float $minBet;
 
+    // TODO: Переименовать в betStepMax
     #[ORM\Column(type: 'integer')]
     private int $betStepCounter;
 

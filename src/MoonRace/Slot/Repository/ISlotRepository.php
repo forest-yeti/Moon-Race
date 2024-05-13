@@ -8,8 +8,12 @@ use App\MoonRace\Slot\Entity\ISlotMachine;
 interface ISlotRepository
 {
     /**
-     * @param ISlotMachine $slotMachine
      * @return ISlot[]
      */
     public function findBySlotMachine(ISlotMachine $slotMachine): array;
+
+    /**
+     * @return ISlot[]
+     */
+    public function findBySlotMachineSortByWinRateDesc(ISlotMachine $slotMachine): array;
 }

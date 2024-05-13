@@ -26,4 +26,14 @@ class SlotRepository extends ServiceEntityRepository implements ISlotRepository
             ->getQuery()
             ->getResult();
     }
+
+    public function findBySlotMachineSortByWinRateDesc(ISlotMachine $slotMachine): array
+    {
+        return $this->createQueryBuilder('s')
+            ->where('s.slotMachine = :slotMachine')
+            ->setParameter('slotMachine', $slotMachine)
+            ->orderBy('s.winRate', 'DESC')
+            ->getQuery()
+            ->getResult();
+    }
 }

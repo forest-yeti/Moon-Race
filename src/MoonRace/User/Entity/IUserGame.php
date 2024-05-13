@@ -11,4 +11,7 @@ interface IUserGame
 
     public function getType(): string;
     public function setType(string $type): self;
+
+    public function getGameId(): int;
+    public function setGameId(int $gameId): self;
 }

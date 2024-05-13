@@ -2,6 +2,7 @@
 
 namespace App\Command\SocketServer;
 
+use App\Infrastructure\Ratchet\Repository\ActionHandlerRepository;
 use App\Infrastructure\Ratchet\Service\OutputBuilder;
 use App\Infrastructure\Ratchet\SocketServer;
 use App\MoonRace\User\Repository\IUserRepository;
@@ -20,8 +21,7 @@ use Ratchet\WebSocket\WsServer;
 class WebSocketServerCommand extends Command
 {
     public function __construct(
-        private readonly IUserRepository $userRepository,
-        private readonly OutputBuilder   $outputBuilder
+        private readonly ActionHandlerRepository $actionHandlerRepository,
     )
     {
         parent::__construct();
@@ -32,7 +32,7 @@ class WebSocketServerCommand extends Command
         $server = IoServer::factory(
             new HttpServer(
                 new WsServer(
-                    new SocketServer($output, $this->userRepository, $this->outputBuilder)
+                    new SocketServer($output, $this->actionHandlerRepository)
                 )
             ),
             8081
