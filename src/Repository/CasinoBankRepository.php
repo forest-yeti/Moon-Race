@@ -3,41 +3,26 @@
 namespace App\Repository;
 
 use App\Entity\CasinoBank;
+use App\MoonRace\CasinoBank\Entity\ICasinoBank;
+use App\MoonRace\CasinoBank\Repository\ICasinoBankRepository;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
  * @extends ServiceEntityRepository<CasinoBank>
  */
-class CasinoBankRepository extends ServiceEntityRepository
+class CasinoBankRepository extends ServiceEntityRepository implements ICasinoBankRepository
 {
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, CasinoBank::class);
     }
 
-    //    /**
-    //     * @return CasinoBank[] Returns an array of CasinoBank objects
-    //     */
-    //    public function findByExampleField($value): array
-    //    {
-    //        return $this->createQueryBuilder('c')
-    //            ->andWhere('c.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->orderBy('c.id', 'ASC')
-    //            ->setMaxResults(10)
-    //            ->getQuery()
-    //            ->getResult()
-    //        ;
-    //    }
-
-    //    public function findOneBySomeField($value): ?CasinoBank
-    //    {
-    //        return $this->createQueryBuilder('c')
-    //            ->andWhere('c.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->getQuery()
-    //            ->getOneOrNullResult()
-    //        ;
-    //    }
+    public function get(): ICasinoBank
+    {
+        return $this->createQueryBuilder('cb')
+            ->setMaxResults(1)
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
 }

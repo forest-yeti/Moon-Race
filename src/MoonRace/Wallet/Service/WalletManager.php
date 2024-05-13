@@ -2,17 +2,24 @@
 
 namespace App\MoonRace\Wallet\Service;
 
+use App\MoonRace\CasinoBank\Repository\ICasinoBankRepository;
 use App\MoonRace\Security\Service\IDataStorageSaver;
 use App\MoonRace\Wallet\Entity\IWallet;
 
 class WalletManager
 {
     public function __construct(
-        private readonly IDataStorageSaver $dataStorageSaver
+        private readonly IDataStorageSaver     $dataStorageSaver,
+        private readonly ICasinoBankRepository $casinoBankRepository
     ) {}
 
     public function withdrawBalance(IWallet $wallet, float $value): void
     {
+        $casinoBank = $this->casinoBankRepository->get();
+        $casinoBank->setPlayerLosePot(
+            $casinoBank->getPlayerLosePot() + $value
+        );
+
         $targetBalance = $wallet->getBalance() - $value;
 
         $wallet->setBalance($targetBalance);
@@ -21,12 +28,18 @@ class WalletManager
         $this->dataStorageSaver->flush();
     }
 
-    public function addBalance(IWallet $wallet, float $value): void
+    public function addBalanceFromWinningPot(IWallet $wallet, float $value): void
     {
-        $targetBalance = $wallet->getBalance() + $value;
+        $casinoBank = $this->casinoBankRepository->get();
+        $casinoBank->setWinningPot(
+            $casinoBank->getWinningPot() - $value
+        );
 
-        $wallet->setBalance($targetBalance);
+        $wallet->setBalance(
+            $wallet->getBalance() + $value
+        );
 
+        $this->dataStorageSaver->persist($casinoBank);
         $this->dataStorageSaver->persist($wallet);
         $this->dataStorageSaver->flush();
     }

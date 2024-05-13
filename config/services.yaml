@@ -34,7 +34,7 @@ services:
     App\Infrastructure\Firebase\Service\AuthService:
         arguments:
             $secretKey: 'owxi5DZxlio5JZx3LMTw'
-            $tokenTtl: 600
+            $tokenTtl: 3600
             $issuer: 'http://moon-race.local'
 
     App\Infrastructure\Ratchet\Repository\ActionHandlerRepository:

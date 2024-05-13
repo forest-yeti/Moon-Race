@@ -75,7 +75,7 @@ class SlotSpinAction
         $win = $winSlot !== null;
 
         if ($win) {
-            $this->walletManager->addBalance(
+            $this->walletManager->addBalanceFromWinningPot(
                 $data->getTargetUser()->getWallet(),
                  $spinCost * $winSlot->getPrizeInLine()
             );

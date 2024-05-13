@@ -2,11 +2,12 @@
 
 namespace App\Entity;
 
+use App\MoonRace\CasinoBank\Entity\ICasinoBank;
 use App\Repository\CasinoBankRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: CasinoBankRepository::class)]
-class CasinoBank
+class CasinoBank implements ICasinoBank
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
