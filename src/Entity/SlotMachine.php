@@ -14,6 +14,12 @@ class SlotMachine implements ISlotMachine
     #[ORM\Column]
     private ?int $id = null;
 
+    #[ORM\Column(type: 'string', length: 32)]
+    private string $name;
+
+    #[ORM\Column(type: 'string')]
+    private string $logo;
+
     #[ORM\Column(type: 'string')]
     private string $backgroundTheme;
 
@@ -22,6 +28,30 @@ class SlotMachine implements ISlotMachine
 
     #[ORM\Column(type: 'integer')]
     private int $betStepCounter;
+
+    public function getName(): string
+    {
+        return $this->name;
+    }
+
+    public function setName(string $name): self
+    {
+        $this->name = $name;
+
+        return $this;
+    }
+
+    public function getLogo(): string
+    {
+        return $this->logo;
+    }
+
+    public function setLogo(string $logo): self
+    {
+        $this->logo = $logo;
+
+        return $this;
+    }
 
     public function getId(): ?int
     {

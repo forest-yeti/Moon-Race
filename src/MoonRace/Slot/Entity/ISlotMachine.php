@@ -6,6 +6,12 @@ interface ISlotMachine
 {
     public function getId(): ?int;
 
+    public function getName(): string;
+    public function setName(string $name): self;
+
+    public function getLogo(): string;
+    public function setLogo(string $logo): self;
+
     public function getBackgroundTheme(): string;
     public function setBackgroundTheme(string $backgroundTheme): self;
 

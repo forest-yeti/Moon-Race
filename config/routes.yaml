@@ -12,3 +12,10 @@ api_v1_profile:
     path: /api/v1/profile
     controller: App\Controller\API\v1\Profile\Controller
     methods: GET
+
+api_v1_game_slot_machine_connect:
+    path: /api/v1/game/slot-machine/connect/{slotMachineId}
+    controller: App\Controller\API\v1\Game\SlotMachine\Connect\Controller
+    methods: POST
+    requirements:
+        requirements: '\d+'
