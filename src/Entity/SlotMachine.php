@@ -23,6 +23,9 @@ class SlotMachine implements ISlotMachine
     #[ORM\Column(type: 'string')]
     private string $backgroundTheme;
 
+    #[ORM\Column(type: 'string')]
+    private string $audioBackground;
+
     #[ORM\Column(type: 'float')]
     private float $minBet;
 
@@ -89,6 +92,17 @@ class SlotMachine implements ISlotMachine
     public function setBetStepCounter(int $betStepCounter): self
     {
         $this->betStepCounter = $betStepCounter;
+        return $this;
+    }
+
+    public function getAudioBackground(): string
+    {
+        return $this->audioBackground;
+    }
+
+    public function setAudioBackground(string $audioBackground): ISlotMachine
+    {
+        $this->audioBackground = $audioBackground;
         return $this;
     }
 }

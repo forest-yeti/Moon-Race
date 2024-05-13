@@ -20,4 +20,7 @@ interface ISlotMachine
 
     public function getBetStepCounter(): int;
     public function setBetStepCounter(int $betStepCounter): self;
+
+    public function getAudioBackground(): string;
+    public function setAudioBackground(string $audioBackground): self;
 }

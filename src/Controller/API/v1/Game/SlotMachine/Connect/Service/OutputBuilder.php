@@ -23,12 +23,13 @@ class OutputBuilder
         }
 
         return [
-            'name'           => $slotMachine->getName(),
-            'logo'           => $slotMachine->getLogo(),
-            'minBet'         => $slotMachine->getMinBet(),
-            'betStepCounter' => $slotMachine->getBetStepCounter(),
-            'background'     => $slotMachine->getBackgroundTheme(),
-            'slots'          => $slotsOutput,
+            'name'            => $slotMachine->getName(),
+            'logo'            => $slotMachine->getLogo(),
+            'minBet'          => $slotMachine->getMinBet(),
+            'betStepCounter'  => $slotMachine->getBetStepCounter(),
+            'background'      => $slotMachine->getBackgroundTheme(),
+            'audioBackground' => $slotMachine->getAudioBackground(),
+            'slots'           => $slotsOutput,
         ];
     }
 }

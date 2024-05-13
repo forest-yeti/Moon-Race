@@ -11,8 +11,8 @@ class RandomNumberGenerator
      *
      * @throws Exception
      */
-    public function generate(): float
+    public function generate(float $precision = 100): float
     {
-        return random_int(0, 100) / 100;
+        return random_int(0, $precision) / $precision;
     }
 }
