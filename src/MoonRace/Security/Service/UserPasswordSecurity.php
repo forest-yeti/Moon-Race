@@ -16,4 +16,9 @@ class UserPasswordSecurity
         $hashedPassword = $this->userPasswordHasher->hashPassword($updatableUser, $targetPassword);
         $updatableUser->setPassword($hashedPassword);
     }
+
+    public function verifyPassword(string $targetPassword, IUserSecurity $updatableUser): bool
+    {
+        return $this->userPasswordHasher->isPasswordValid($updatableUser, $targetPassword);
+    }
 }

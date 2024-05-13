@@ -2,9 +2,11 @@
 
 namespace App\MoonRace\User\Repository;
 
-use App\Entity\User;
+use App\MoonRace\User\Entity\IUser;
 
 interface IUserRepository
 {
-    public function findByEmail(string $email): ?User;
+    public function findById(int $id): ?IUser;
+
+    public function findByEmail(string $email): ?IUser;
 }

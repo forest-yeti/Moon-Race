@@ -26,3 +26,9 @@ services:
     App\MoonRace\User\Action\UserRegistrationAction:
         arguments:
             $userDefaultAvatar: '%env(USER_DEFAULT_AVATAR)%'
+
+    App\Infrastructure\Firebase\Service\AuthService:
+        arguments:
+            $secretKey: 'owxi5DZxlio5JZx3LMTw'
+            $tokenTtl: 600
+            $issuer: 'http://moon-race.local'

@@ -2,3 +2,13 @@ api_v1_user_registration:
     path: /api/v1/user/registration
     controller: App\Controller\API\v1\User\Registration\Controller
     methods: POST
+
+api_v1_user_login:
+    path: /api/v1/user/login
+    controller: App\Controller\API\v1\User\Login\Controller
+    methods: POST
+
+api_v1_profile:
+    path: /api/v1/profile
+    controller: App\Controller\API\v1\Profile\Controller
+    methods: GET
