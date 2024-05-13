@@ -3,41 +3,27 @@
 namespace App\Repository;
 
 use App\Entity\Slot;
+use App\MoonRace\Slot\Entity\ISlotMachine;
+use App\MoonRace\Slot\Repository\ISlotRepository;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
  * @extends ServiceEntityRepository<Slot>
  */
-class SlotRepository extends ServiceEntityRepository
+class SlotRepository extends ServiceEntityRepository implements ISlotRepository
 {
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Slot::class);
     }
 
-    //    /**
-    //     * @return Slot[] Returns an array of Slot objects
-    //     */
-    //    public function findByExampleField($value): array
-    //    {
-    //        return $this->createQueryBuilder('s')
-    //            ->andWhere('s.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->orderBy('s.id', 'ASC')
-    //            ->setMaxResults(10)
-    //            ->getQuery()
-    //            ->getResult()
-    //        ;
-    //    }
-
-    //    public function findOneBySomeField($value): ?Slot
-    //    {
-    //        return $this->createQueryBuilder('s')
-    //            ->andWhere('s.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->getQuery()
-    //            ->getOneOrNullResult()
-    //        ;
-    //    }
+    public function findBySlotMachine(ISlotMachine $slotMachine): array
+    {
+        return $this->createQueryBuilder('s')
+            ->where('s.slotMachine = :slotMachine')
+            ->setParameter('slotMachine', $slotMachine)
+            ->getQuery()
+            ->getResult();
+    }
 }
