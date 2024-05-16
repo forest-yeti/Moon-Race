@@ -26,4 +26,14 @@ class SlotMachineRepository extends ServiceEntityRepository implements ISlotMach
             ->getQuery()
             ->getOneOrNullResult();
     }
+
+    /**
+     * @return ISlotMachine[]
+     */
+    public function getAll(): array
+    {
+        return $this->createQueryBuilder('sm')
+            ->getQuery()
+            ->getResult();
+    }
 }

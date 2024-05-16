@@ -61,6 +61,11 @@ class SocketServer implements MessageComponentInterface
             $this->connect($user, $from);
             return;
         }
+        else if ($input->getAction() === 'disconnect')
+        {
+            $this->disconnect($from);
+            return;
+        }
 
         try {
             $actionHandler = $this->actionHandlerRepository->find($input->getAction());

@@ -19,3 +19,8 @@ api_v1_game_slot_machine_connect:
     methods: POST
     requirements:
         requirements: '\d+'
+
+api_v1_game_slot_machine_list:
+    path: /api/v1/game/slot-machine
+    controller: App\Controller\API\v1\Game\SlotMachine\GetList\Controller
+    methods: GET
