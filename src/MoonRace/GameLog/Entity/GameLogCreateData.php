@@ -11,7 +11,7 @@ class GameLogCreateData
     private int      $gameId;
     private array    $metaData = [];
     private User     $user;
-    private float    $randomNumber;
+    private float    $randomNumber = 0;
     private bool     $win;
 
     public function getGameType(): string

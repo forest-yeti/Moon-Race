@@ -13,17 +13,21 @@ class WalletManager
         private readonly ICasinoBankRepository $casinoBankRepository
     ) {}
 
-    public function withdrawBalance(IWallet $wallet, float $value): void
+    public function withdrawBalance(IWallet $wallet, float $userWithdrawValue, ?float $losePot = null): void
     {
+        if ($losePot === null) {
+            $losePot = $userWithdrawValue;
+        }
+
         $casinoBank = $this->casinoBankRepository->get();
         $casinoBank->setPlayerLosePot(
-            $casinoBank->getPlayerLosePot() + $value
+            $casinoBank->getPlayerLosePot() + $losePot
         );
 
-        $targetBalance = $wallet->getBalance() - $value;
-
+        $targetBalance = $wallet->getBalance() - $userWithdrawValue;
         $wallet->setBalance($targetBalance);
 
+        $this->dataStorageSaver->persist($casinoBank);
         $this->dataStorageSaver->persist($wallet);
         $this->dataStorageSaver->flush();
     }

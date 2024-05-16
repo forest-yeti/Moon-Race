@@ -13,6 +13,7 @@ class OutputBuilder
             'logo'    => $slotMachine->getLogo(),
             'name'    => $slotMachine->getName(),
             'min_bet' => $slotMachine->getMinBet(),
+            'jackpot' => $slotMachine->getSlotJackpot()?->getJackpot(),
         ];
     }
 }

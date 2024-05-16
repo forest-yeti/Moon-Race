@@ -33,6 +33,9 @@ class SlotMachine implements ISlotMachine
     #[ORM\Column(type: 'integer')]
     private int $betStepCounter;
 
+    #[ORM\ManyToOne(targetEntity: SlotJackpot::class)]
+    private ?SlotJackpot $slotJackpot = null;
+
     public function getName(): string
     {
         return $this->name;
@@ -103,6 +106,18 @@ class SlotMachine implements ISlotMachine
     public function setAudioBackground(string $audioBackground): ISlotMachine
     {
         $this->audioBackground = $audioBackground;
+        return $this;
+    }
+
+    public function getSlotJackpot(): ?SlotJackpot
+    {
+        return $this->slotJackpot;
+    }
+
+    public function setSlotJackpot(?SlotJackpot $slotJackpot): self
+    {
+        $this->slotJackpot = $slotJackpot;
+
         return $this;
     }
 }

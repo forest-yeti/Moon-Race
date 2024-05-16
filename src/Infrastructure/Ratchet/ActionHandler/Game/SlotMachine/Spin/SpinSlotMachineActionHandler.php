@@ -48,9 +48,11 @@ class SpinSlotMachineActionHandler implements IActionHandler
             $this->outputBuilder->build(
                 'Slot spin',
                 [
-                    'win'     => $slotSpinResult->isWin(),
-                    'lines'   => $slotSpinResult->getLines(),
-                    'balance' => $slotSpinResult->getCurrentBalance(),
+                    'win'       => $slotSpinResult->isWin(),
+                    'lines'     => $slotSpinResult->getLines(),
+                    'balance'   => $slotSpinResult->getCurrentBalance(),
+                    'jackpot'   => $slotSpinResult->isWinJackpot(),
+                    'free_spin' => $slotSpinResult->isCanFreeSpin(),
                 ],
                 true
             )

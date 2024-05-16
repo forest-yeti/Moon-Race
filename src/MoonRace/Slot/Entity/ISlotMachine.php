@@ -2,6 +2,8 @@
 
 namespace App\MoonRace\Slot\Entity;
 
+use App\Entity\SlotJackpot;
+
 interface ISlotMachine
 {
     public function getId(): ?int;
@@ -23,4 +25,7 @@ interface ISlotMachine
 
     public function getAudioBackground(): string;
     public function setAudioBackground(string $audioBackground): self;
+
+    public function getSlotJackpot(): ?SlotJackpot;
+    public function setSlotJackpot(?SlotJackpot $slotJackpot): self;
 }
