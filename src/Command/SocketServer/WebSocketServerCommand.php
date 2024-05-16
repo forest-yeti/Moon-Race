@@ -6,6 +6,7 @@ use App\Infrastructure\Ratchet\Repository\ActionHandlerRepository;
 use App\Infrastructure\Ratchet\Service\OutputBuilder;
 use App\Infrastructure\Ratchet\SocketServer;
 use App\MoonRace\User\Repository\IUserRepository;
+use App\MoonRace\User\Service\UserConnector;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
@@ -21,6 +22,8 @@ use Ratchet\WebSocket\WsServer;
 class WebSocketServerCommand extends Command
 {
     public function __construct(
+        private readonly UserConnector           $userConnector,
+        private readonly IUserRepository         $userRepository,
         private readonly ActionHandlerRepository $actionHandlerRepository,
     )
     {
@@ -32,7 +35,7 @@ class WebSocketServerCommand extends Command
         $server = IoServer::factory(
             new HttpServer(
                 new WsServer(
-                    new SocketServer($output, $this->actionHandlerRepository)
+                    new SocketServer($this->userConnector, $this->userRepository, $output, $this->actionHandlerRepository)
                 )
             ),
             8081

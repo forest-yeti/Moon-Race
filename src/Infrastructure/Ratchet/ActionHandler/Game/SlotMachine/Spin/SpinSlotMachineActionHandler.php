@@ -2,21 +2,20 @@
 
 namespace App\Infrastructure\Ratchet\ActionHandler\Game\SlotMachine\Spin;
 
+use App\Entity\User;
 use App\Infrastructure\Ratchet\ActionHandler\Game\SlotMachine\Spin\ValueObject\SlotSpinData;
 use App\Infrastructure\Ratchet\ActionHandler\IActionHandler;
 use App\Infrastructure\Ratchet\Input\Input;
 use App\Infrastructure\Ratchet\Service\OutputBuilder;
 use App\MoonRace\Slot\Action\SlotSpinAction;
-use App\MoonRace\User\Repository\IUserRepository;
 use Exception;
 use Ratchet\ConnectionInterface;
 
 class SpinSlotMachineActionHandler implements IActionHandler
 {
     public function __construct(
-        private readonly IUserRepository $userRepository,
-        private readonly SlotSpinAction  $slotSpinAction,
-        private readonly OutputBuilder   $outputBuilder
+        private readonly SlotSpinAction $slotSpinAction,
+        private readonly OutputBuilder  $outputBuilder
     ) {}
 
     public function getActionName(): string
@@ -24,9 +23,8 @@ class SpinSlotMachineActionHandler implements IActionHandler
         return 'spin-slot-machine';
     }
 
-    public function run(string $socketToken, ConnectionInterface $from, Input $input): bool
+    public function run(User $user, ConnectionInterface $from, Input $input): bool
     {
-        $user = $this->userRepository->findBySocketToken($socketToken);
         $data = new SlotSpinData(
             $user,
             $input->get('bet_step')

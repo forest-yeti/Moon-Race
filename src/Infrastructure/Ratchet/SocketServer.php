@@ -2,58 +2,48 @@
 
 namespace App\Infrastructure\Ratchet;
 
-use App\Infrastructure\Ratchet\ActionHandler\ConnectActionHandler;
+use App\Entity\User;
 use App\Infrastructure\Ratchet\Input\Input;
 use App\Infrastructure\Ratchet\Repository\ActionHandlerRepository;
-use App\Infrastructure\Ratchet\Service\OutputBuilder;
 use App\MoonRace\User\Repository\IUserRepository;
+use App\MoonRace\User\Service\UserConnector;
 use Exception;
 use Ratchet\MessageComponentInterface;
 use Ratchet\ConnectionInterface;
 use RuntimeException;
 use Symfony\Component\Console\Formatter\OutputFormatterStyle;
-use SplObjectStorage;
 use Symfony\Component\Console\Output\OutputInterface;
 
 class SocketServer implements MessageComponentInterface
 {
-    private SplObjectStorage $clients;
+    private array $authorizedClients = [];
 
     public function __construct(
+        private readonly UserConnector           $userConnector,
+        private readonly IUserRepository         $userRepository,
         private readonly OutputInterface         $consoleOutput,
         private readonly ActionHandlerRepository $actionHandlerRepository
-    )
-    {
-        $this->clients = new SplObjectStorage();
-    }
+    ) {}
 
     function onOpen(ConnectionInterface $conn): void
     {
-        $this->clients->attach($conn);
-
         $outputStyle = new OutputFormatterStyle('black', 'green');
         $this->consoleOutput->getFormatter()->setStyle('notify', $outputStyle);
         $this->consoleOutput->writeln('<notify>Connected</notify>');
-        $this->consoleOutput->writeln(
-            sprintf('<notify>Clients - %d</notify>', $this->clients->count())
-        );
     }
 
     function onClose(ConnectionInterface $conn): void
     {
-        $this->clients->detach($conn);
+        $this->disconnect($conn);
 
         $outputStyle = new OutputFormatterStyle('black', 'red');
         $this->consoleOutput->getFormatter()->setStyle('danger', $outputStyle);
         $this->consoleOutput->writeln('<danger>Close</danger>');
-        $this->consoleOutput->writeln(
-            sprintf('<danger>Clients - %d</danger>', $this->clients->count())
-        );
     }
 
     function onError(ConnectionInterface $conn, Exception $e): void
     {
-        // ...
+        $this->disconnect($conn);
     }
 
     function onMessage(ConnectionInterface $from, $msg): void
@@ -61,11 +51,44 @@ class SocketServer implements MessageComponentInterface
         $payload = json_decode($msg, true);
         $input = new Input($payload);
 
+        $user = $this->userRepository->findBySocketToken($input->get('socket_token'));
+        if ($user === null) {
+            return;
+        }
+
+        if ($input->getAction() === 'connect')
+        {
+            $this->connect($user, $from);
+            return;
+        }
+
         try {
             $actionHandler = $this->actionHandlerRepository->find($input->getAction());
-            $actionHandler->run($input->get('socket_token'), $from, $input);
+            $actionHandler->run($user, $from, $input);
         } catch (RuntimeException) {
             // ...
+        }
+    }
+
+    private function connect(User $user, ConnectionInterface $from): void
+    {
+        $this->authorizedClients[$user->getSocketToken()] = $from;
+    }
+
+    private function disconnect(ConnectionInterface $conn): void
+    {
+        foreach ($this->authorizedClients as $socketToken => $client) {
+            if ($client === $conn) {
+                $user = $this->userRepository->findBySocketToken($socketToken);
+                if ($user === null) {
+                    break;
+                }
+
+                $this->userConnector->disconnect($user);
+                unset($this->authorizedClients[$socketToken]);
+
+                break;
+            }
         }
     }
 }

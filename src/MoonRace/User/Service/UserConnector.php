@@ -2,7 +2,6 @@
 
 namespace App\MoonRace\User\Service;
 
-use App\Entity\UserGame;
 use App\MoonRace\Common\Exception\RuntimeException;
 use App\MoonRace\Common\Game\Enum\GameTypeEnum;
 use App\MoonRace\Security\Service\IDataStorageSaver;
@@ -37,7 +36,7 @@ class UserConnector
         $this->dataStorageSaver->flush();
     }
 
-    private function disconnect(IUser $user): void
+    public function disconnect(IUser $user): void
     {
         $userGame = $this->userGameRepository->findByUser($user);
         if ($userGame === null) {
