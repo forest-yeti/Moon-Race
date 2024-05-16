@@ -36,4 +36,17 @@ class UserConnector
         $this->dataStorageSaver->persist($userGame);
         $this->dataStorageSaver->flush();
     }
+
+    private function disconnect(IUser $user): void
+    {
+        $userGame = $this->userGameRepository->findByUser($user);
+        if ($userGame === null) {
+            return;
+        }
+
+        $this
+            ->dataStorageSaver
+            ->remove($userGame)
+            ->flush();
+    }
 }

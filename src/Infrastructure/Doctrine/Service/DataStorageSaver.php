@@ -24,4 +24,10 @@ class DataStorageSaver implements IDataStorageSaver
 
         return $this;
     }
+
+    public function remove(object $removableData): IDataStorageSaver
+    {
+        $this->entityManager->remove($removableData);
+        return $this;
+    }
 }

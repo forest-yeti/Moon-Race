@@ -5,6 +5,8 @@ namespace App\MoonRace\Slot\Action;
 use App\MoonRace\Casino\Service\RandomNumberGenerator;
 use App\MoonRace\Common\Exception\RuntimeException;
 use App\MoonRace\Common\Game\Enum\GameTypeEnum;
+use App\MoonRace\GameLog\Entity\GameLogCreateData;
+use App\MoonRace\GameLog\Service\GameLogger;
 use App\MoonRace\Slot\Contract\ISlotSpinData;
 use App\MoonRace\Slot\Dto\SlotSpinResult;
 use App\MoonRace\Slot\Entity\ISlot;
@@ -21,6 +23,7 @@ class SlotSpinAction
         private readonly ISlotMachineRepository $slotMachineRepository,
         private readonly RandomNumberGenerator  $randomNumberGenerator,
         private readonly ISlotRepository        $slotRepository,
+        private readonly GameLogger             $gameLogger,
         private readonly WalletManager          $walletManager
     ) {}
 
@@ -80,6 +83,15 @@ class SlotSpinAction
                  $spinCost * $winSlot->getPrizeInLine()
             );
         }
+
+        $this->gameLogger->log(
+            (new GameLogCreateData())
+                ->setGameType(GameTypeEnum::SlotMachine->value)
+                ->setGameId($userGame->getGameId())
+                ->setUser($userGame->getUser())
+                ->setWin($win)
+                ->setRandomNumber($randomNumber)
+        );
 
         return (new SlotSpinResult())
             ->setWin($win)
